@@ -45,8 +45,10 @@ export default function Home() {
     setFilteredAdvocates(filteredAdvocates);
   };
 
-  const onClick = () => {
+  const onResetClick = () => {
     console.log(advocates);
+
+    setSearchTerm("")
     setFilteredAdvocates(advocates);
   };
 
@@ -63,8 +65,8 @@ export default function Home() {
         <p>
           Searching for: <span id="search-term">{searchTerm}</span>
         </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+        <input style={{ border: "1px solid black" }} onChange={onChange} type="text" value={searchTerm} />
+        <button onClick={onResetClick}>Reset Search</button>
       </div>
       <br />
       <br />
