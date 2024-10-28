@@ -42,7 +42,6 @@ export default function Home() {
       );
     });
 
-    console.log({filteredAdvocates})
     setFilteredAdvocates(filteredAdvocates);
   };
 
@@ -51,9 +50,12 @@ export default function Home() {
     setFilteredAdvocates(advocates);
   };
 
+  // TO DO - the table needs CSS and borders for the rows
+  // TO DO - the top specialty should be horizontally aligned with the rest of the row
+
   return (
     <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
+      <h1 className="text-green text-3xl border-b-2 border-solaceGreen pb-2">Solace Advocates</h1>
       <br />
       <br />
       <div>
