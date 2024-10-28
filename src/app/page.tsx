@@ -23,20 +23,26 @@ export default function Home() {
 
     setSearchTerm(searchTerm)
 
+    const caseInsensitiveIncludes = (src: string, tar: string) => {
+      return src.toLowerCase().includes(tar.toLowerCase())
+    }
+
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
       return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm as Specialties) ||
+        caseInsensitiveIncludes(advocate.firstName, searchTerm) ||
+        caseInsensitiveIncludes(advocate.lastName, searchTerm) ||
+        caseInsensitiveIncludes(advocate.city, searchTerm) ||
+        caseInsensitiveIncludes(advocate.degree, searchTerm) ||
+        advocate.specialties.some((specialty) => 
+          caseInsensitiveIncludes(specialty, searchTerm as string)
+        ) ||
         searchTerm === '' + advocate.yearsOfExperience ||
-        ('' + advocate.phoneNumber).includes(searchTerm)
+        caseInsensitiveIncludes('' + advocate.phoneNumber, searchTerm)
       );
     });
 
-    // TO DO - filteredAdvocates isn't working
+    console.log({filteredAdvocates})
     setFilteredAdvocates(filteredAdvocates);
   };
 
