@@ -57,19 +57,21 @@ export default function Home() {
 
   return (
     <main style={{ margin: "24px" }}>
-      <h1 className="text-green text-3xl border-b-2 border-solaceGreen pb-2">Solace Advocates</h1>
+      <h1 className="text-green text-3xl border-b-2 pb-2">Solace Advocates</h1>
       <br />
       <br />
-      <div>
-        <p>Search</p>
-        <p>
+      <div className="border-b">
+        <h2 className="text-green text-xl pb-2">Search</h2>
+        <span>
           Searching for: <span id="search-term">{searchTerm}</span>
-        </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} type="text" value={searchTerm} />
-        <button onClick={onResetClick}>Reset Search</button>
+        </span>
+        <div className ="w-full max-w-sm mr-auto flex justify-between px-0">
+          <input className="p-2 rounded-lg" style={{ border: "1px solid black" }} onChange={onChange} type="text" value={searchTerm} />
+          <button className="btn-primary" onClick={onResetClick}>Reset Search</button>
+        </div>
+        <br />
+        <br /> 
       </div>
-      <br />
-      <br />
       <table>
         <thead>
           <tr>
