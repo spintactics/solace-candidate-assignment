@@ -1,77 +1,96 @@
+import React, { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-import { ColDef } from 'ag-grid-community';
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+import { ColDef, ICellRendererParams } from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-grid.css'; // Mandatory CSS required by the Data Grid
+import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional Theme applied to the Data Grid
 
-import { Advocate } from "../../types/advocates"
+import { Advocate } from '../../types/advocates';
+import ListTooltip from './ListTooltip';
 
 interface AdvocateTableProps {
-  filteredAdvocates: Advocate[]
+  filteredAdvocates: Advocate[];
 }
 
 export default function AdvocateTable({ filteredAdvocates }: AdvocateTableProps) {
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+
+  const toggleRowExpand = (id: string) => {
+    setExpandedRows((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
 
   const colDefs: ColDef<Advocate>[] = [
-    { field: 'firstName' },
-    { field: 'lastName' },
-    { field: 'city'  },
-    { field: 'degree' },
-    { field: 'specialties' },
-    { field: 'yearsOfExperience' },
-    { field: 'phoneNumber' }
+    { field: 'firstName', flex: 1 },
+    { field: 'lastName', flex: 1 },
+    { field: 'city', flex: 1 },
+    { field: 'degree', maxWidth: 90, flex: 1 },
+    {
+      headerName: 'Specialties',
+      field: 'specialties',
+      flex: 2,
+      autoHeight: true, // Ensure the row height adjusts based on content
+      tooltipField: 'specialties',
+      tooltipComponent: ListTooltip,
+      cellRenderer: (params: ICellRendererParams<Advocate, string[] | null | undefined>) => {
+        const nodeId = params.node.id!;
+        const isExpanded = expandedRows[nodeId];
+
+        return (
+          <div style={{ position: 'relative' }} onClick={() => toggleRowExpand(nodeId)}>
+            <div
+              style={{ display: 'inline-block', cursor: 'pointer' }}
+            >
+              <span style={{ marginRight: '5px' }}>{isExpanded ? '▼' : '>'}</span> {/* Toggle icon */}
+              {params.value ? params.value.slice(0, 2).join(', ') : 'No specialties'}
+              {params.value && params.value.length > 2 && '...'}
+            </div>
+
+            {isExpanded && (
+              <div
+                style={{
+                  marginBottom: '5px',
+                  marginTop: '5px',
+                  backgroundColor: '#f0f0f0',
+                  padding: '5px',
+                  border: '1px solid #ddd',
+                  zIndex: 1, // Ensure visibility
+                  position: 'relative',
+                  whiteSpace: 'normal', // Allow text to wrap
+                  overflow: 'visible', // Ensure full visibility of content
+                  wordBreak: 'break-word', // Break long words to avoid overflow
+                }}
+              >
+                {params.value?.map((specialty, index) => (
+                  <div key={index}>{specialty}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    { field: 'yearsOfExperience', flex: 1 },
+    { field: 'phoneNumber', flex: 1 },
   ];
-
-  // TO DO - there should be loading state
-
-  // TO DO - give each row it's own unique key
-
-  // TO DO - the table needs CSS and borders for the rows
-  // TO DO - the top specialty should be horizontally aligned with the rest of the row
 
   return (
     <div
-      className="ag-theme-alpine-dark"
-      style={{ 
-        height: '50vh',
+      className="ag-theme-alpine"
+      style={{
+        height: '60vh',
         maxHeight: '70vh',
-        width: '100%' }}
+        width: '100%',
+      }}
     >
-      <AgGridReact
-          rowData={filteredAdvocates}
-          columnDefs={colDefs}
+      <AgGridReact<Advocate>
+        rowData={filteredAdvocates}
+        columnDefs={colDefs}
+        pagination={true}
+        paginationPageSize={10}
+        paginationPageSizeSelector={[10, 20, 50]}
       />
     </div>
-      // <table>
-      //   <thead>
-      //     <tr>
-      //       <th>First Name</th>
-      //       <th>Last Name</th>
-      //       <th>City</th>
-      //       <th>Degree</th>
-      //       <th>Specialties</th>
-      //       <th>Years of Experience</th>
-      //       <th>Phone Number</th>
-      //     </tr>
-      //   </thead>
-      //   <tbody>
-      //     {filteredAdvocates.map((advocate) => {
-      //       return (
-      //         <tr>
-      //           <td>{advocate.firstName}</td>
-      //           <td>{advocate.lastName}</td>
-      //           <td>{advocate.city}</td>
-      //           <td>{advocate.degree}</td>
-      //           <td>
-      //             {advocate.specialties.map((s) => (
-      //               <div>{s}</div>
-      //             ))}
-      //           </td>
-      //           <td>{advocate.yearsOfExperience}</td>
-      //           <td>{advocate.phoneNumber}</td>
-      //         </tr>
-      //       );
-      //     })}
-      //   </tbody>
-      // </table>
   );
 }
