@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn-primary {
+  @apply text-green text-center bg-transparent border border-green 
+         rounded-lg px-8 py-3 font-sans font-bold text-base leading-6 
+         no-underline transition-all duration-300 hover:bg-green hover:text-white;
+}
