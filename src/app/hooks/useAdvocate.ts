@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Advocate } from "../../types/advocates"
 
 export default function useAdvocate() {
-  // TO DO - pass searchTerm to this
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [loading, setLoading] = useState(true);
 
